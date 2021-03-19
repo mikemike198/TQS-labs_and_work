@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+Test set: ua.AppTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.045 s <<< FAILURE! - in ua.AppTest
+shouldAnswerWithTrue  Time elapsed: 0.037 s  <<< ERROR!
+java.lang.Error: 
+Unresolved compilation problem: 
+	The method assertTrue(boolean) is undefined for the type AppTest
+
+	at ua.AppTest.shouldAnswerWithTrue(AppTest.java:21)
+
