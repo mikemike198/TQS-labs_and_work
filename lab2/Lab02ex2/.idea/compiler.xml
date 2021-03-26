@@ -6,11 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gs-MockForHttpClient" />
+        <module name="Lab02ex2" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="gs-MockForHttpClient" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>
