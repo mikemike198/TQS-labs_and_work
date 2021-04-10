@@ -6,8 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Lab02ex1" />
-        <module name="Lab02" />
+        <module name="SeleniumTesting" />
       </profile>
     </annotationProcessing>
   </component>

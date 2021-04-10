@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Lab02ex1" />
-        <module name="Lab02" />
+        <module name="TQS_Stack" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="TQS_Stack" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
