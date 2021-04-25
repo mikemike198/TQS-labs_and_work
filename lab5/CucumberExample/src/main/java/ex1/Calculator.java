@@ -1,4 +1,4 @@
-package tqs;
+package ex1;
 
 import static java.util.Arrays.asList;
 

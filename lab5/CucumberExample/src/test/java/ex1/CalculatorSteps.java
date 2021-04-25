@@ -1,4 +1,4 @@
-package tqs;
+package ex1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,7 +11,7 @@ public class CalculatorSteps {
 
     private Calculator calc;
 
-    @Given("^a calculator I just terned on$")
+    @Given("^a calculator I just turned on$")
     public void setup() {
         calc = new Calculator();
     }
