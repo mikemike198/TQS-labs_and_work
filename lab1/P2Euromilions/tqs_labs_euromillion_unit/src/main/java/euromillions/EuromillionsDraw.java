@@ -1,6 +1,7 @@
 package euromillions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Models an Euromillions draw. Contains the solution and allows to find
@@ -22,24 +23,15 @@ public class EuromillionsDraw {
     }
 
     /**
-     * Creates a new draw from a random solution.
-     *
-     * @return new instance
-     */
-    static public EuromillionsDraw generateRandomDraw() {
-        return new EuromillionsDraw(Dip.generateRandomDip());
-    }
-
-    /**
      * Find the numbers and start matches.
      *
      * @param playCuppon the user sheet
      * @return an array of dips containing only the numbers and starts that
      * are also present in the draw
      */
-    public ArrayList<Dip> findMatches(CuponEuromillions playCuppon) {
+    public List<Dip> findMatches(CuponEuromillions playCuppon) {
 
-        ArrayList<Dip> results = new ArrayList<Dip>();
+        ArrayList<Dip> results = new ArrayList<>();
         Dip workingDip;
 
         for (Dip dip : playCuppon) {
@@ -62,4 +54,15 @@ public class EuromillionsDraw {
     public Dip getDrawResults() {
         return drawResults;
     }
+
+    /**
+     * Creates a new draw from a random solution.
+     *
+     * @return new instance
+     */
+    static public EuromillionsDraw generateRandomDraw() {
+        return new EuromillionsDraw(Dip.generateRandomDip());
+    }
+
+
 }

@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
 
-public class EuromillionsDrawTest {
+class EuromillionsDrawTest {
 
     private CuponEuromillions sampleCuppon;
 
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         sampleCuppon = new CuponEuromillions();
         sampleCuppon.addDipToCuppon(Dip.generateRandomDip());
         sampleCuppon.addDipToCuppon(Dip.generateRandomDip());
@@ -19,7 +19,7 @@ public class EuromillionsDrawTest {
 
 
     @Test
-    public void testFindMatches() {
+    void testFindMatches() {
         Dip expected, actual;
 
         // test for perfect match on the 3rd dip

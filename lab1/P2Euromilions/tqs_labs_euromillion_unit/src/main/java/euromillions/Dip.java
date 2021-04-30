@@ -1,10 +1,10 @@
 package euromillions;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 import sets.SetOfNaturals;
 
-import java.util.Random;
 
 /**
  * A set of 5 numbers and 2 starts according to the Euromillions ranges.
@@ -14,12 +14,13 @@ import java.util.Random;
 public class Dip {
 
 
+    private static SecureRandom generator = new SecureRandom();
     private SetOfNaturals numbers;
     private SetOfNaturals starts;
-    private static int NUM_STARS = 2;
-    private static int NUM_NUMS = 5;
-    private static int MAX_RANGE_NUMS = 50;
-    private static int MAX_RANGE_STARS = 10;
+    private static int numStars = 2;
+    private static int numNums = 5;
+    private static int maxRangeNums = 50;
+    private static int maxRangeStars = 10;
 
     public Dip() {
         numbers = new SetOfNaturals();
@@ -29,7 +30,7 @@ public class Dip {
     public Dip(int[] arrayOfNumbers, int[] arrayOfStarts) {
         this();
 
-        if (NUM_NUMS == arrayOfNumbers.length && NUM_STARS == arrayOfStarts.length) {
+        if (numNums == arrayOfNumbers.length && numStars == arrayOfStarts.length) {
             numbers.add(arrayOfNumbers);
             starts.add(arrayOfStarts);
         } else {
@@ -47,18 +48,18 @@ public class Dip {
     }
 
     public static Dip generateRandomDip() {
-        Random generator = new Random();
 
         Dip randomDip = new Dip();
-        for (int i = 0; i < NUM_NUMS; ) {
-            int candidate = generator.nextInt(MAX_RANGE_NUMS -1) + 1;
+        int i;
+        for (i = 0; i < numNums; ) {
+            int candidate = generator.nextInt(maxRangeNums -1) + 1;
             if (!randomDip.getNumbersColl().contains(candidate)) {
                 randomDip.getNumbersColl().add(candidate);
                 i++;
             }
         }
-        for (int i = 0; i < NUM_STARS; ) {
-            int candidate = generator.nextInt(MAX_RANGE_STARS -1 ) + 1;
+        for (i = 0; i < numStars; ) {
+            int candidate = generator.nextInt(maxRangeStars -1 ) + 1;
             if (!randomDip.getStarsColl().contains(candidate)) {
                 randomDip.getStarsColl().add(candidate);
                 i++;
