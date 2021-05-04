@@ -1,0 +1,11 @@
+.nav {
+    display: flex;
+    width: 100%;
+    background-color: black;
+    color: white;
+    justify-content: center;
+}
+
+.nav h1 {
+    font-family: 'Poppins', sans-serif;
+}
