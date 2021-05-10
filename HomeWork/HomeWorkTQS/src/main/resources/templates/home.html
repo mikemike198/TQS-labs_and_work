@@ -1,17 +1,58 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>LearnJava Spring Boot Application</title>
+    <title>QualityAir</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="nav">
-    <h1>Welcome to QualityAir!</h1>
-</div>
-<div class="main">
+    <div class="nav">
+        <h1>Welcome to QualityAir!</h1>
+    </div>
+    <div class="main">
+        <div class="leftSection">
+            <div class="search">
+                <h1>Search</h1>
+                <form th:action="@{/home/search}" th:object="${search}" method="post">
+                    <input required="required" type="text" id="city" th:field="*{city}" placeholder="City to search...">
+                    <input required="required" type="text" id="state" th:field="*{state}" placeholder="District to search...">
+                    <input required="required" type="text" id="country" th:field="*{country}" placeholder="Country to search...">
+                    <button type="submit" >GO</button>
+                </form>
+            </div>
+            <div class="airQualityCharts">
+                <h1>Chart Air Quality</h1>
+                <div>0-50 Good</div>
+                <div>51-100 Moderate</div>
+                <div>101-150 Unhealthy for sensitive groups</div>
+                <div>151-200 Unhealthy</div>
+                <div>201-300 Very Unhealthy</div>
+                <div>301-500 Hazardous</div>
+            </div>
+        </div>
+        <div class="data">
+            <div class="temperature">
+                <div>
+                    <div th:text="${city}"></div>
+                    <div id="countryName" th:text="${country}">Portugal</div>
+                    <div th:text="${temperature} + 'º'"></div>
+                </div>
+                <img th:src="${'/icons/' + icon + '.png'}"/>
+            </div>
+            <div class="weather_data">
+                <h3>Weather</h3>
+                <div> Humidity: <p th:text="${humidity}"></p></div>
+                <div> Pressure: <p th:text="${pressure}"></p></div>
+                <div> Wind Speed: <p th:text="${wind_speed}"></p></div>
 
-</div>
+                <h3>Pollution</h3>
+                <div> Air Quality Index (US): <p th:text="${aqiUS}"></p></div>
+                <div> Air Quality Index (China): <p th:text="${aqiCN}"></p></div>
+
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
