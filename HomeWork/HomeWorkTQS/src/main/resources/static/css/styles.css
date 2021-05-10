@@ -15,7 +15,7 @@ body {
     background-color: black;
     color: white;
     justify-content: center;
-    margin-bottom:2vh;
+    margin-bottom: 2vh;
     font-size: 2vh;
 }
 
@@ -67,15 +67,14 @@ body {
 
 input[type=text] {
     width: 30vw;
-    border-radius:20px;
+    border-radius: 20px;
     border-color: black;
     background-color: white;
     color: black;
-    margin: 0;
+    margin: 0 0 0.5vh 0;
     padding: 1vw;
     font-size: 1vw;
     font-family: 'Poppins', sans-serif;
-    margin-bottom: 0.5vh;
 }
 
 button {
@@ -112,7 +111,7 @@ button {
 }
 
 .airQualityCharts div {
-    margin: 0vw 3vw 0vw 1vw;
+    margin: 0 3vw 0 1vw;
     padding: 0.8vw;
     font-size: 0.8vw;
 }

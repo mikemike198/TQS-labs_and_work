@@ -1,17 +1,12 @@
 package ua.pt.tqs.HomeWorkTQS.controllers;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.pt.tqs.HomeWorkTQS.services.WebQualityService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Controller
 public class WebQualityAirController {

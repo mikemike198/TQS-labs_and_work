@@ -9,6 +9,7 @@ public class Search {
     public Search(String city, String country, String state) {
         this.city = city;
         this.country = country;
+        this.state = state;
     }
 
     public Search() {
