@@ -1,11 +1,9 @@
 package ua.pt.tqs.HomeWorkTQS;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import ua.pt.tqs.HomeWorkTQS.entities.Cache;
 import ua.pt.tqs.HomeWorkTQS.repository.CacheRepository;
 
@@ -36,7 +34,5 @@ public class CacheRepositoryTest {
         List<Cache> result = repository.findByCity("Aveiro");
 
         assertThat(result.get(0)).isEqualTo(cache);
-
-
     }
 }
