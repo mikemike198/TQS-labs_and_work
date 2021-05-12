@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="nav">
+        <a href="/"><img th:src="${'/icons/home.png'}"></a>
         <h1>Welcome to QualityAir!</h1>
     </div>
     <div class="main">
@@ -36,7 +37,7 @@
                 <div>
                     <div th:text="${city}"></div>
                     <div id="countryName" th:text="${country}">Portugal</div>
-                    <div th:text="${temperature} + 'º'"></div>
+                    <div id="actualTemperature" th:text="${temperature} + 'º'"></div>
                 </div>
                 <img th:src="${'/icons/' + icon + '.png'}"/>
             </div>
