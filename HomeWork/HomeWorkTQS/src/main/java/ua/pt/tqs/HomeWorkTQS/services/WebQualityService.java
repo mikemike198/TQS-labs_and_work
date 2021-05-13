@@ -1,15 +1,17 @@
 package ua.pt.tqs.HomeWorkTQS.services;
 
 import org.json.simple.parser.ParseException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import ua.pt.tqs.HomeWorkTQS.entities.Cache;
@@ -24,44 +26,24 @@ public class WebQualityService {
     private URL url;
     private String key;
     private CacheRepository cache;
+    private HttpClient client;
 
-    public WebQualityService(CacheRepository repository) {
+    public WebQualityService(CacheRepository repository, HttpClient client) {
 
         this.key = "a31160fa-9ac8-4105-9e77-ad3fc53cfe71";
         this.cache = repository;
+        this.client = client;
     }
 
-    private JSONObject fetchFromAPI(URL url) {
-        JSONObject data = null;
+    private JSONObject fetchFromAPI(URL url)  {
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-
-            int code = conn.getResponseCode();
-
-            if (code != 200) {
-                throw new RuntimeException("HttpResponseCode: " + code);
-            } else {
-
-                String jsonString = "";
-
-                Scanner scanner = new Scanner(url.openStream());
-
-                while (scanner.hasNext()) {
-                    jsonString += scanner.nextLine();
-                }
-                scanner.close();
-
-                JSONParser parse = new JSONParser();
-                JSONObject data_obj = (JSONObject) parse.parse(jsonString);
-
-                data = (JSONObject) data_obj.get("data");
-            }
-        } catch (Exception e) {
-                e.printStackTrace();
-        }
+            JSONObject res = client.getResponse(url.toString());
+            JSONObject data = (JSONObject) res.get("data");
             return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public JSONObject getDataFromNearestCity() {
@@ -70,9 +52,9 @@ public class WebQualityService {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-
-        return (JSONObject) fetchFromAPI(url);
+        JSONObject data = fetchFromAPI(url);
+        System.out.print("Service data" + data);
+        return data;
     }
 
     public JSONObject getDataFromSpecificCity(String city, String state, String country) {
@@ -103,7 +85,6 @@ public class WebQualityService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            System.out.println("Yes");
             result.incrementNumberRequests();
             cache.save(result);
             return finalResult;
@@ -119,35 +100,77 @@ public class WebQualityService {
         return data;
     }
 
-    public List<Cache> getAllCache() {
-        Iterable<Cache> all = cache.findAll();
-        List<Cache> allCache = new ArrayList<>();
-        all.forEach(allCache::add);
-        return allCache ;
+    public List<Cache> getCache(Optional<String> city, Optional<String> country) {
+        List<Cache> cacheReturned;
+
+        if (city.isPresent() && country.isPresent()) {
+            cacheReturned = cache.findByCityAndCountry(city.get(), country.get());
+            if (cacheReturned.isEmpty()) {
+                JSONObject apiData = getDataFromSpecificCity(city.get(), city.get(), country.get());
+                Cache newCache = new Cache(
+                        apiData.get("city").toString(),
+                        apiData.get("state").toString(),
+                        apiData.get("country").toString(),
+                        apiData.toString(),
+                        LocalDateTime.now(),
+                        30);
+                cache.save(newCache);
+                Cache cacheToReturn = cache.findByCityAndCountry(
+                        apiData.get("city").toString(),
+                        apiData.get("country").toString()).get(0);
+                cacheReturned.add(cacheToReturn);
+            }
+        } else if (city.isPresent()) {
+            cacheReturned = cache.findByCity(city.get());
+        } else if (country.isPresent()) {
+           cacheReturned = cache.findByCountry(country.get());
+        } else {
+            cacheReturned = cache.findAll();
+            if (cacheReturned.isEmpty()) {
+                JSONObject apiData = getDataFromNearestCity();
+                Cache newCache = new Cache(
+                        apiData.get("city").toString(),
+                        apiData.get("state").toString(),
+                        apiData.get("country").toString(),
+                        apiData.toString(),
+                        LocalDateTime.now(),
+                        30);
+
+                cache.save(newCache);
+                Cache cacheToReturn = cache.findByCityAndCountry(
+                        apiData.get("city").toString(),
+                        apiData.get("country").toString()).get(0);
+                cacheReturned.add(cacheToReturn);
+            }
+        }
+
+        return cacheReturned;
     }
 
-    public List<Cache> getCityCache(String city) {
-        Iterable<Cache> all = cache.findByCity(city);
-        System.out.print(all);
-        List<Cache> allCache = new ArrayList<>();
-        all.forEach(allCache::add);
-        return allCache;
-    }
+    public List<Statistics> getStatistics(Optional<String> city, Optional<String> country) {
+        List<Cache> allCache;
 
-    public List<Cache> getCountryCache(String country) {
-        Iterable<Cache> all = cache.findByCountry(country);
-        System.out.print(all);
-        List<Cache> allCache = new ArrayList<>();
-        all.forEach(allCache::add);
-        return allCache;
-    }
+        if (city.isPresent() && country.isPresent()) {
+            allCache = cache.findByCityAndCountry(city.get(), country.get());
+        } else if (city.isPresent()) {
+            allCache = cache.findByCity(city.get());
+        } else if (country.isPresent()) {
+            allCache = cache.findByCountry(country.get());
+        } else {
+            allCache = cache.findAll();
+        }
 
-    public List<Cache> getCityCountryCache(String city, String country) {
-        Iterable<Cache> all = cache.findByCityAndCountry(city, country);
-        System.out.print(all);
-        List<Cache> allCache = new ArrayList<>();
-        all.forEach(allCache::add);
-        return allCache;
+        List<Statistics> response = new ArrayList<>();
+
+        for(Cache cache: allCache) {
+            String cacheCountry = cache.getCountry();
+            String cacheCity = cache.getCity();
+            int nRequests = cache.getNumberRequests();
+            Statistics stat = new Statistics(nRequests,cacheCity,cacheCountry);
+            response.add(stat);
+        }
+
+        return response;
     }
 
 

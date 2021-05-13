@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ua.pt.tqs.HomeWorkTQS.entities.Cache;
+import ua.pt.tqs.HomeWorkTQS.services.Statistics;
 import ua.pt.tqs.HomeWorkTQS.services.WebQualityService;
 
 import java.util.Collections;
@@ -39,7 +40,18 @@ public class WebQualityAirController {
         JSONObject forecasts = null;
         JSONObject pollution = null;
         JSONObject data = (JSONObject) service.getDataFromNearestCity();
+
+        if (data == null) {
+            return new ModelAndView("errorPage");
+        }
+
+        if(data.get("current") == null) {
+            return new ModelAndView("errorPage");
+        }
         current = (JSONObject) data.get("current");
+        if(current.get("weather") == null) {
+            return new ModelAndView("errorPage");
+        }
         forecasts = (JSONObject) current.get("weather");
         pollution = (JSONObject) current.get("pollution");
 
@@ -72,7 +84,13 @@ public class WebQualityAirController {
             return new ModelAndView("errorPage");
         }
 
+        if(data.get("current") == null) {
+            return new ModelAndView("errorPage");
+        }
         current = (JSONObject) data.get("current");
+        if(current.get("weather") == null) {
+            return new ModelAndView("errorPage");
+        }
         forecasts = (JSONObject) current.get("weather");
         pollution = (JSONObject) current.get("pollution");
 
@@ -95,26 +113,20 @@ public class WebQualityAirController {
 
     //REST API
 
-    @GetMapping("/api/cache/all")
-    public ResponseEntity<List<Cache>> getAllCache() {
-        List<Cache> result = service.getAllCache();
-        return ResponseEntity.ok().body(result);
-    }
-
-    @RequestMapping(value = "/api/cache/search" , method = RequestMethod.GET)
-    public ResponseEntity<List<Cache>> getCityCountryCache(@RequestParam(value = "city", required = false) Optional<String> city, @RequestParam(value = "country", required = false) Optional<String> country) {
-
-        List<Cache> result = null;
-
-        if (city.isPresent() && country.isPresent()) {
-            result = service.getCityCountryCache(city.get(), country.get());
-        } else if (city.isPresent()) {
-            result = service.getCityCache(city.get());
-        } else if (country.isPresent()) {
-            result = service.getCountryCache(country.get());
+    @RequestMapping(value = "/api/search" , method = RequestMethod.GET)
+    public ResponseEntity<List<Cache>> getAllCache(@RequestParam(value = "city", required = false) Optional<String> city, @RequestParam(value = "country", required = false) Optional<String> country) {
+        List<Cache> result = service.getCache(city,country);
+        if (result != null) {
+            return ResponseEntity.ok().body(result);
         } else {
             return ResponseEntity.badRequest().body(Collections.emptyList());
         }
+    }
+
+    @RequestMapping(value = "/api/cache/stats" , method = RequestMethod.GET)
+    public ResponseEntity<List<Statistics>> getCityCountryCache(@RequestParam(value = "city", required = false) Optional<String> city, @RequestParam(value = "country", required = false) Optional<String> country) {
+
+        List<Statistics> result = service.getStatistics(city,country);
 
         if (result != null) {
             return ResponseEntity.ok().body(result);
@@ -123,6 +135,7 @@ public class WebQualityAirController {
         }
 
     }
+
 
 
 
