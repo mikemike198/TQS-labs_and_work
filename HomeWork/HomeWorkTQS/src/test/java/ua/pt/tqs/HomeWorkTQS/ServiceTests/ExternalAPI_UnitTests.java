@@ -1,54 +1,48 @@
 package ua.pt.tqs.HomeWorkTQS.ServiceTests;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import ua.pt.tqs.HomeWorkTQS.repository.CacheRepository;
 import ua.pt.tqs.HomeWorkTQS.services.HttpClient;
-import ua.pt.tqs.HomeWorkTQS.services.WebQualityService;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 public class ExternalAPI_UnitTests {
 
-    @Mock
-    private CacheRepository repository;
+    private HttpClient client = new HttpClient();
 
-    @Mock
-    private HttpClient client;
-
-    @InjectMocks
-    private WebQualityService service;
 
     @Test
-    public void testIfNothingInCacheFetchAPI() {
-
-        JSONParser parser = new JSONParser();
-
-        given(repository.findByCityAndCountry("Aveiro", "Portugal")).willReturn(Collections.emptyList());
+    public void testIfCityAndCountryReturnedAreTheSameAsTheRequest() {
+        String city = "Aveiro";
+        String state = "Aveiro";
+        String country = "Portugal";
+        String key ="a31160fa-9ac8-4105-9e77-ad3fc53cfe71";
         try {
-            given(client.getResponse(any())).willReturn((JSONObject) parser.parse("{\"status\":\"success\",\"data\":{\"city\":\"Aveiro\",\"state\":\"Aveiro\",\"country\":\"Portugal\",\"location\":{\"type\":\"Point\",\"coordinates\":[-8.646666666666667,40.635555555555555]},\"current\":{\"weather\":{\"ts\":\"2021-05-13T18:00:00.000Z\",\"tp\":16,\"pr\":1018,\"hu\":88,\"ws\":3.09,\"wd\":300,\"ic\":\"03d\"},\"pollution\":{\"ts\":\"2021-05-13T18:00:00.000Z\",\"aqius\":13,\"mainus\":\"p2\",\"aqicn\":4,\"maincn\":\"p2\"}}}}"));
-        } catch (IOException | ParseException e) {
+            URL url = new URL("http://api.airvisual.com/v2/city?city="+city+"&state="+state+"&country="+country+"&key="+key);
+            JSONObject response = client.getResponse(url.toString());
+            String cityResponse = (String)((JSONObject)response.get("data")).get("city");
+            String stateResponse = (String)((JSONObject)response.get("data")).get("state");
+            String countryResponse = (String)((JSONObject)response.get("data")).get("country");
+
+            assertAll(
+                    () -> assertEquals(city, cityResponse),
+                    () -> assertEquals(country, countryResponse),
+                    () -> assertEquals(state, stateResponse)
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        JSONObject data = service.getDataFromSpecificCity("Aveiro", "Aveiro", "Portugal");
 
-        verify(repository, times(1)).save(any());
-        assertThat(data).isNotNull();
+
 
     }
 

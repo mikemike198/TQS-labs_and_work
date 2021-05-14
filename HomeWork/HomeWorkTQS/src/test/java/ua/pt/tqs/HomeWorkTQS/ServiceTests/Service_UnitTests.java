@@ -93,6 +93,29 @@ public class Service_UnitTests {
     }
 
     @Test
+    public void testIfNothingInCacheFetchAPI() {
+
+        JSONParser parser = new JSONParser();
+
+        given(repository.findByCityAndCountry("Aveiro", "Portugal")).willReturn(Collections.emptyList());
+        try {
+            given(client.getResponse(any())).willReturn((JSONObject) parser.parse("{\"status\":\"success\",\"data\":{\"city\":\"Aveiro\",\"state\":\"Aveiro\",\"country\":\"Portugal\",\"location\":{\"type\":\"Point\",\"coordinates\":[-8.646666666666667,40.635555555555555]},\"current\":{\"weather\":{\"ts\":\"2021-05-13T18:00:00.000Z\",\"tp\":16,\"pr\":1018,\"hu\":88,\"ws\":3.09,\"wd\":300,\"ic\":\"03d\"},\"pollution\":{\"ts\":\"2021-05-13T18:00:00.000Z\",\"aqius\":13,\"mainus\":\"p2\",\"aqicn\":4,\"maincn\":\"p2\"}}}}"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject data = service.getDataFromSpecificCity("Aveiro", "Aveiro", "Portugal");
+
+        verify(repository, times(1)).save(any());
+        try {
+            verify(client, times(1)).getResponse(any());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assertThat(data).isNotNull();
+    }
+
+    @Test
     public void testIfGivenNoCityAndNoCountry_returnAllCacheStatistics() {
         List<Cache> caches = new ArrayList<>();
         caches.add(cache1);

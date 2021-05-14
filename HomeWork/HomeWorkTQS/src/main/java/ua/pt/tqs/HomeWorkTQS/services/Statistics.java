@@ -23,4 +23,28 @@ public class Statistics {
                 ", country='" + country + '\'' +
                 '}';
     }
+
+    public int getnRequests() {
+        return nRequests;
+    }
+
+    public void setnRequests(int nRequests) {
+        this.nRequests = nRequests;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 }

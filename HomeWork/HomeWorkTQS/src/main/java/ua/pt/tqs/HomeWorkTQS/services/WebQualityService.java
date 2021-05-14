@@ -119,11 +119,28 @@ public class WebQualityService {
                         apiData.get("city").toString(),
                         apiData.get("country").toString()).get(0);
                 cacheReturned.add(cacheToReturn);
+            } else {
+                for(Cache c : cacheReturned) {
+                    c.incrementNumberRequests();
+                    cache.save(c);
+                }
             }
         } else if (city.isPresent()) {
             cacheReturned = cache.findByCity(city.get());
+            if(!cacheReturned.isEmpty()) {
+                for(Cache c : cacheReturned) {
+                    c.incrementNumberRequests();
+                    cache.save(c);
+                }
+            }
         } else if (country.isPresent()) {
            cacheReturned = cache.findByCountry(country.get());
+            if(!cacheReturned.isEmpty()) {
+                for(Cache c : cacheReturned) {
+                    c.incrementNumberRequests();
+                    cache.save(c);
+                }
+            }
         } else {
             cacheReturned = cache.findAll();
             if (cacheReturned.isEmpty()) {
@@ -141,6 +158,11 @@ public class WebQualityService {
                         apiData.get("city").toString(),
                         apiData.get("country").toString()).get(0);
                 cacheReturned.add(cacheToReturn);
+            } else {
+                for(Cache c : cacheReturned) {
+                    c.incrementNumberRequests();
+                    cache.save(c);
+                }
             }
         }
 
