@@ -76,6 +76,7 @@ public class WebQualityService {
             System.out.println(now);
             boolean isBefore = date.isBefore(now);
             if (isBefore) {
+                cache.delete(result);
                 break;
             }
             JSONParser parser = new JSONParser();

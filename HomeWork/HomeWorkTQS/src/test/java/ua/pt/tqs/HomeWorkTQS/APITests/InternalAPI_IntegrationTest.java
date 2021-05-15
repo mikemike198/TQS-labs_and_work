@@ -145,5 +145,19 @@ public class InternalAPI_IntegrationTest {
         }
     }
 
+    @Test
+    public void testIfNumberOfRequestsAreRegistering() {
+        String url = "/api/search?city=Aveiro&country=Portugal";
+        ResponseEntity<Cache[]> entity = client.getForEntity(url, Cache[].class);
+        url = "/api/cache/stats";
+        ResponseEntity<Statistics[]> stats = client.getForEntity(url, Statistics[].class);
+
+        for(Statistics stat: stats.getBody()) {
+            if(stat.getCity().equals("Aveiro")) {
+                assertThat(stat.getnRequests()).isEqualTo(5);
+            }
+        }
+    }
+
 
 }
